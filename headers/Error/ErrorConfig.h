@@ -1,0 +1,12 @@
+#ifndef ERROR_CONFIG_H
+#define ERROR_CONFIG_H
+//
+#ifdef DEBUG
+#define ADDITIONAL_ERROR_INFO
+#endif
+
+#if CPP_VERSION >= 20
+#define USE_STD_SOURCE_LOCATION_INSTEAD
+#endif
+
+#endif // ERROR_CONFIG_H
