@@ -29,4 +29,4 @@ endif()
 
 find_package(Vulkan REQUIRED)
 
-target_link_libraries(MyProject PRIVATE D:/ProjVSC/VulkanGraphics/Libraries/vulkan/vulkan-1.lib)
+target_link_libraries(MyProject PRIVATE D:/ProjVSC/VulkanGraphics/libraries/vulkan/vulkan-1.lib)
