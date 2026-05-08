@@ -15,14 +15,12 @@ list(FILTER SOURCES EXCLUDE REGEX "Oldcode/")
 
 add_executable(MyProject ${SOURCES})
 
-# Include directory (REQUIRED "include" folder)
 target_include_directories(${PROJECT_NAME}
     PRIVATE
-        ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/external
         ${PROJECT_SOURCE_DIR}/headers
 )
 
-# Compiler warnings
 if (MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE /W4)
 else()
