@@ -43,5 +43,7 @@ void Cursor::Destroy() {
     hcursor = nullptr;
   }
 }
+#elif LINUX_PLATFORM
+// ! Linux placeholder
 #endif
 }; // namespace WindowSystem
