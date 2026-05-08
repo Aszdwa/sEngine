@@ -1,15 +1,18 @@
 #include "Graphics/Color.h"  // IWYU pragma: keep
 #include "Error/ErrorCore.h" // IWYU pragma: keep
+#include "headers/Error/ErrorHandler.h"
 using namespace ErrorContext;
 
 #include "Graphics/Window.h"
 
 int main() {
-  /*Error err =
+  /*
+  Error err =
       MAKE_ERROR(14, "Window", ErrorSeverity::Error, "Couldn't resize window");
-  // DialogLog(err, DIALOG_TYPE::OK_CANCEL);
-  TerminalLog(IO_STREAM::ERR, err, Color::AsciiColor(Color::AsciiEnum::Red));*/
+  TerminalLog(IO_STREAM::ERR, err, Color::AsciiColor(Color::AsciiEnum::Red));
+  */
 
+  /*
   WindowSystem::WindowLayout layout{};
   layout.title = "Janeulas";
   layout.class_name = "Janeulas class";
@@ -30,5 +33,11 @@ int main() {
   }
 
   window.Destroy();
+  */
+
+  Error err =
+      MAKE_ERROR(14, "Window", ErrorSeverity::Error, "Couldn't resize window");
+  ErrorContext::Handle(err);
+
   return 0;
 }

@@ -2,6 +2,7 @@
 #define WINDOW_H
 //
 #include "Compatibility/Compatibility.h" // IWYU pragma: keep
+#include <string>
 //
 #ifdef WINDOWS_PLATFORM
 #define WIN32_LEAN_AND_MEAN
@@ -67,7 +68,114 @@ struct WindowPlatform {
 };
 
 }; // namespace WindowSystem
-//
+
+namespace WindowSystem {
+
+enum class DialogType {
+  Ok,
+  Help,
+  CancelContinue,
+  AbortRetryContinue,
+  OkCancel,
+  RetryCancel,
+  YesNo,
+  YesNoCancel,
+};
+enum class DialogResult {
+  Ok,
+  Retry,
+  Cancel,
+  Yes,
+  No,
+  Ignore,
+  Continue,
+  Help,
+  Abort,
+  Unknown
+};
+
+struct DialogLayout {
+  std::string title;
+  std::string message;
+  DialogType type = DialogType::Ok;
+  //
+  DialogLayout() = default;
+  DialogLayout(const std::string &title, const std::string &message,
+               DialogType type)
+      : title(title), message(message), type(type) {}
+}; // struct DialogLayout
+
+class Dialog {
+private:
+  DialogLayout layout;
+
+public:
+  Dialog() = default;
+  Dialog(const DialogLayout &layout) : layout(layout) {}
+
+public:
+  void setLayout(const DialogLayout &param_layout) { layout = param_layout; }
+
+public:
+  DialogResult Show() {
+#ifdef WINDOWS_PLATFORM
+    UINT flags = MB_ICONERROR;
+
+    switch (layout.type) {
+    case DialogType::Ok:
+      flags |= MB_OK;
+      break;
+    case DialogType::Help:
+      flags |= MB_OK | MB_HELP;
+      break;
+    case DialogType::CancelContinue:
+      flags |= MB_CANCELTRYCONTINUE;
+      break;
+    case DialogType::AbortRetryContinue:
+      flags |= MB_ABORTRETRYIGNORE;
+      break;
+    case DialogType::OkCancel:
+      flags |= MB_OKCANCEL;
+      break;
+    case DialogType::RetryCancel:
+      flags |= MB_RETRYCANCEL;
+      break;
+    case DialogType::YesNo:
+      flags |= MB_YESNO;
+      break;
+    case DialogType::YesNoCancel:
+      flags |= MB_YESNOCANCEL;
+      break;
+    }
+    int result = MessageBoxA(nullptr, layout.message.c_str(),
+                             layout.title.c_str(), flags);
+#endif // WINDOWS_PLATFORM
+    switch (result) {
+    case IDOK:
+      return DialogResult::Ok;
+    case IDCANCEL:
+      return DialogResult::Cancel;
+    case IDRETRY:
+      return DialogResult::Retry;
+    case IDYES:
+      return DialogResult::Yes;
+    case IDNO:
+      return DialogResult::No;
+    case IDIGNORE:
+      return DialogResult::Ignore;
+    case IDCONTINUE:
+      return DialogResult::Continue;
+    case IDABORT:
+      return DialogResult::Abort;
+    case IDHELP:
+      return DialogResult::Help;
+    default:
+      return DialogResult::Unknown;
+    }
+  } // switch result
+}; // class Dialog
+}; // namespace WindowSystem
+
 namespace WindowSystem { // Definitions
 class Window {
 public:
