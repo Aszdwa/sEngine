@@ -26,5 +26,8 @@ int main() {
 
   window.Destroy();
 
+  Error err = MAKE_ERROR(1, "Window", ErrorSeverity::Error, "Deu ruim aki óh!");
+  Handle(err);
+
   return 0;
 }

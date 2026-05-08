@@ -1,6 +1,8 @@
 #ifndef ERROR_OUTPUT_H
 #define ERROR_OUTPUT_H
 
+#include "ErrorEnums.h"
+#include "ErrorTypes.h"
 #include "ErrorFormatting.h"
 #include "Graphics/Color.h"
 #include "Graphics/Window.h"
@@ -8,8 +10,6 @@
 #include <iostream>
 
 namespace ErrorContext {
-
-enum class IoStream { Out, Err };
 
 [[nodiscard]] inline std::ostream &SelectStream(const IoStream stream) {
 

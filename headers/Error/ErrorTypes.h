@@ -2,14 +2,13 @@
 #define ERROR_TYPES_H
 //
 #include <string>
+#include "ErrorEnums.h"
 //
 #ifdef USE_STD_SOURCE_LOCATION_INSTEAD
 #include <source_location>
 #endif
 
 namespace ErrorContext {
-
-enum class ErrorSeverity { Info, Warning, Error, Fatal };
 
 struct Error {
   int code = 0;
