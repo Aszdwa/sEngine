@@ -11,36 +11,20 @@
 
 namespace ErrorContext {
 
-[[nodiscard]] inline std::ostream &SelectStream(const IoStream stream) {
-
-  switch (stream) {
-  case IoStream::Out:
-    return std::cout;
-
-  case IoStream::Err:
-    return std::cerr;
-  }
-
-  return std::cout;
-}
-
-inline void TerminalLog(const Error &error, const IoStream stream,
-                        const Color::AsciiColor &color) {
-
-  auto &output = SelectStream(stream);
-
-  output << color.to_string() << BuildMessage(error)
+inline void TerminalLog(const Error &error, IoStream stream,
+                        Color::AsciiColor color = Color::AsciiEnum::Reset) {
+  std::ostream &output = (stream == IoStream::Err) ? std::cerr : std::cout;
+  color = (color.code == Color::AsciiEnum::Reset) ? sevColor(error.severity)
+                                                  : color;
+  output << color.to_string() << buildMessage(error)
          << Color::AsciiColor().to_string() << std::endl;
 }
 
 inline WindowSystem::DialogResult
 DialogLog(const Error &error, const WindowSystem::DialogType type) {
-
   const std::string title =
-      std::string(ToString(error.severity)) + " " + error.source;
-
-  WindowSystem::DialogLayout layout{title, BuildMessage(error), type};
-
+      std::string(strSeverity(error.severity)) + " " + error.source;
+  WindowSystem::DialogLayout layout{title, error.message, type};
   return WindowSystem::Dialog(layout).Show();
 }
 

@@ -1,94 +1,48 @@
 #ifndef ERROR_FORMATTING_H
 #define ERROR_FORMATTING_H
-
-#include "ErrorTypes.h"
+//
+#include "Error/ErrorTypes.h"
+#include "Error/ErrorEnums.h"
 #include "Graphics/Color.h"
 #include <string>
-
+//
 namespace ErrorContext {
 
-[[nodiscard]] inline const char *ToString(const ErrorSeverity severity) {
-
-  switch (severity) {
+inline std::string strSeverity(const ErrorSeverity &sev) {
+  switch (sev) {
   case ErrorSeverity::Info:
     return "[INFO]";
-
   case ErrorSeverity::Warning:
     return "[WARNING]";
-
   case ErrorSeverity::Error:
     return "[ERROR]";
-
   case ErrorSeverity::Fatal:
     return "[FATAL]";
-  }
-
+  } // switch severity
   return "[UNKNOWN]";
 }
 
-[[nodiscard]] inline std::string BuildMessage(const Error &error) {
-
-  std::string result;
-
-  result += ToString(error.severity);
-  result += " Code: ";
-  result += std::to_string(error.code);
-  result += " | Source: ";
-  result += error.source;
-  result += " | Message: ";
-  result += error.message;
-
-#ifdef ADDITIONAL_ERROR_INFO
-
-  result += "\nFile: ";
-  result += error.file;
-
-  result += " | Line: ";
-  result += std::to_string(error.line);
-
-  result += " | Function: ";
-  result += error.function;
-
-#endif
-
-  return result;
-}
-
-[[nodiscard]] inline Color::AsciiColor
-SeverityColor(const ErrorSeverity severity) {
-
-  switch (severity) {
+inline Color::AsciiEnum sevColor(const ErrorSeverity &sev) {
+  switch (sev) {
   case ErrorSeverity::Info:
-    return Color::AsciiColor(Color::AsciiEnum::Cyan);
-
+    return Color::AsciiEnum::Blue;
   case ErrorSeverity::Warning:
-    return Color::AsciiColor(Color::AsciiEnum::Yellow);
-
+    return Color::AsciiEnum::Yellow;
   case ErrorSeverity::Error:
-    return Color::AsciiColor(Color::AsciiEnum::Red);
-
+    return Color::AsciiEnum::Red;
   case ErrorSeverity::Fatal:
-    return Color::AsciiColor(Color::AsciiEnum::Magenta);
-  }
-
-  return Color::AsciiColor(Color::AsciiEnum::White);
+    return Color::AsciiEnum::Magenta;
+  } // switch severity
+  return Color::AsciiEnum::Reset;
 }
 
-[[nodiscard]] inline IoStream SeverityStream(const ErrorSeverity severity) {
-
-  switch (severity) {
-  case ErrorSeverity::Info:
-    return IoStream::Out;
-
-  case ErrorSeverity::Warning:
-  case ErrorSeverity::Error:
-  case ErrorSeverity::Fatal:
-    return IoStream::Err;
-  }
-
-  return IoStream::Err;
+inline std::string buildMessage(const Error &err) {
+  std::string message;
+  message += strSeverity(err.severity);
+  message += " : " + err.message;
+  return message;
 }
 
-} // namespace ErrorContext
+}; // namespace ErrorContext
 
-#endif
+#endif // ERROR_FORMATING_H
