@@ -1,3 +1,4 @@
+#include "Error/ErrorEnums.h"
 #include "Graphics/Color.h"  // IWYU pragma: keep
 #include "Error/ErrorCore.h" // IWYU pragma: keep
 using namespace ErrorContext;
@@ -23,6 +24,9 @@ int main() {
   while (window.IsRunning()) {
     window.Update();
   }
+
+  Error err = MAKE_ERROR(14, "Hello, world!", "Window", ErrorSeverity::Error);
+  TerminalLog(err, IoStream::Err, Color::AsciiEnum::Green);
 
   window.Destroy();
   return 0;

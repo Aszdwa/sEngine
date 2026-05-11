@@ -18,7 +18,7 @@ struct Rgb_uc {
 struct Rgb_f {
   float r, g, b;
   // Constructors
-  constexpr Rgb_f() = default;
+  Rgb_f() = default;
   constexpr Rgb_f(float r, float g, float b);
   constexpr Rgb_f(const Rgb_uc &c);
 };

@@ -1,6 +1,7 @@
 #ifndef ERROR_FORMATTING_H
 #define ERROR_FORMATTING_H
 //
+#include "Compatibility/Compatibility.h" // IWYU pragma: keep
 #include "Error/ErrorTypes.h"
 #include "Error/ErrorEnums.h"
 #include "Graphics/Color.h"
@@ -40,8 +41,23 @@ inline std::string buildMessage(const Error &err) {
   std::string message;
   message += strSeverity(err.severity);
   message += " : " + err.message;
+#ifdef ADDITIONAL_ERROR_INFO
+  message += "\n" + err.file + " at line: " + std::to_string(err.line);
+  message += "\n" + err.function;
+#endif
+
   return message;
 }
+
+}; // namespace ErrorContext
+
+namespace ErrorContext { // MACROS
+#ifdef DEBUG
+#define MAKE_ERROR(code, msg, src, sev)                                        \
+  Error(code, msg, src, sev, FILE_NAME, LINE_NUMBER, FUNC_NAME)
+#else
+#define MAKE_ERROR(code, msg, src, sev) Error(code, msg, src, sev)
+#endif
 
 }; // namespace ErrorContext
 

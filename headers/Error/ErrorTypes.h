@@ -3,6 +3,8 @@
 //
 #include <string>
 #include "ErrorEnums.h"
+#include "Compatibility/Compatibility.h" // IWYU pragma: keep
+#include "ErrorConfig.h"
 //
 #ifdef USE_STD_SOURCE_LOCATION_INSTEAD
 #include <source_location>
@@ -24,17 +26,21 @@ struct Error {
 
   Error() = default;
 
+#ifdef RELEASE
   Error(int errorCode, std::string errorMessage, std::string errorSource,
         ErrorSeverity errorSeverity = ErrorSeverity::Error)
       : code(errorCode), message(std::move(errorMessage)),
         source(std::move(errorSource)), severity(errorSeverity) {}
+
+#else
 
 #ifdef ADDITIONAL_ERROR_INFO
 
 #ifdef USE_STD_SOURCE_LOCATION_INSTEAD
 
   Error(int errorCode, std::string errorMessage, std::string errorSource,
-        ErrorSeverity errorSeverity, const std::source_location &location)
+        ErrorSeverity errorSeverity,
+        const std::source_location &location = std::source_location::current())
       : code(errorCode), message(std::move(errorMessage)),
         source(std::move(errorSource)), severity(errorSeverity),
         file(location.file_name()), line(static_cast<int>(location.line())),
@@ -52,6 +58,7 @@ struct Error {
 
 #endif // USE_STD_SOURCE_LOCATION_INSTEAD
 #endif // ADDITIONAL_ERROR_INFO
+#endif // RELEASE
 };
 
 } // namespace ErrorContext
