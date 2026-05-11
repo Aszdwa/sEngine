@@ -1,6 +1,5 @@
 #include "Graphics/Color.h"  // IWYU pragma: keep
 #include "Error/ErrorCore.h" // IWYU pragma: keep
-#include "headers/Error/ErrorOutput.h"
 using namespace ErrorContext;
 
 #include "Graphics/Window.h"
@@ -26,10 +25,6 @@ int main() {
   }
 
   window.Destroy();
-
-  Error err{14, "Deu erro oh kkkj", "Window", ErrorSeverity::Warning};
-  ErrorContext::TerminalLog(err, IoStream::Err);
-  ErrorContext::DialogLog(err, WindowSystem::DialogType::Ok);
   return 0;
 }
 
