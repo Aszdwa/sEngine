@@ -52,12 +52,12 @@ inline std::string buildMessage(const Error &err) {
 }; // namespace ErrorContext
 
 namespace ErrorContext { // MACROS
-#ifdef DEBUG
+#if defined(DEBUG) && !defined(USE_STD_SOURCE_LOCATION_INSTEAD)
 #define MAKE_ERROR(code, msg, src, sev)                                        \
   Error(code, msg, src, sev, FILE_NAME, LINE_NUMBER, FUNC_NAME)
 #else
 #define MAKE_ERROR(code, msg, src, sev) Error(code, msg, src, sev)
-#endif
+#endif // DEBUG
 
 }; // namespace ErrorContext
 
