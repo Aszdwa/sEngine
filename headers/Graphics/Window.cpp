@@ -1,8 +1,11 @@
-#include "Window.h"
+#include "Graphics/Window.h" // IWYU pragma: keep
+#include "Error/ErrorCore.h" // IWYU pragma: keep
 
 namespace WindowSystem {
-
 Window::Window(const WindowLayout &layout) : layout(layout) {}
+} // namespace WindowSystem
+
+namespace WindowSystem {
 
 #ifdef WINDOWS_PLATFORM
 
@@ -16,13 +19,6 @@ LRESULT CALLBACK Window::WndProc(HWND hwnd, UINT msg, WPARAM wParam,
   case WM_DESTROY:
     PostQuitMessage(0);
     return 0;
-
-    /*case WM_PAINT:
-      PAINTSTRUCT ps;
-      HDC hdc = BeginPaint(hwnd, &ps);
-      FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_HOTLIGHT + 1));
-      EndPaint(hwnd, &ps);
-    */
   } // switch (msg)
 
   return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -75,7 +71,10 @@ int Window::Create() {
   wc.hCursor = layout.cursor.GetHandle();
 
   if (!RegisterClass(&wc)) {
-    MessageBox(nullptr, "RegisterClass failed", "Error", MB_OK);
+    ErrorContext::Error err =
+        ErrorContext::MAKE_ERROR(1, "Failed to register window class", "Window",
+                                 ErrorContext::ErrorSeverity::Fatal);
+    REPORT_ERROR(err);
     return 1;
   }
 
@@ -85,7 +84,10 @@ int Window::Create() {
                      nullptr, nullptr, platform.hInstance, nullptr);
 
   if (!platform.hwnd) {
-    MessageBox(nullptr, "CreateWindowEx failed", "Error", MB_OK);
+    ErrorContext::Error err =
+        ErrorContext::MAKE_ERROR(2, "Failed to create window", "Window",
+                                 ErrorContext::ErrorSeverity::Fatal);
+    REPORT_ERROR(err);
     return 2;
   }
 

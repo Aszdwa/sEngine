@@ -22,9 +22,7 @@ inline void TerminalLog(const Error &error, IoStream stream,
 
 inline WindowSystem::DialogResult
 DialogLog(const Error &error, const WindowSystem::DialogType type) {
-  const std::string title =
-      std::string(strSeverity(error.severity)) + " " + error.source;
-  WindowSystem::DialogLayout layout{title, error.message, type};
+  WindowSystem::DialogLayout layout{error.source, buildMessage(error), type};
   return WindowSystem::Dialog(layout).Show();
 }
 

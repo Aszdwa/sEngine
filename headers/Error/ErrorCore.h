@@ -7,4 +7,5 @@
 #include "ErrorTypes.h"                  // IWYU pragma: keep
 #include "ErrorFormatting.h"             // IWYU pragma: keep
 #include "ErrorOutput.h"                 // IWYU pragma: keep
+#include "ErrorHandler.h"                // IWYU pragma: keep
 #endif                                   // ERROR_CORE_H

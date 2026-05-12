@@ -1,9 +1,11 @@
-#include "Error/ErrorEnums.h"
-#include "Graphics/Color.h"  // IWYU pragma: keep
+#include "Graphics/Color.h" // IWYU pragma: keep
+#define CUSTOM_ERROR_HANDLER
 #include "Error/ErrorCore.h" // IWYU pragma: keep
 using namespace ErrorContext;
 
 #include "Graphics/Window.h"
+
+void Handle(Error &error) { TerminalLog(error, IoStream::Err); }
 
 int main() {
   WindowSystem::WindowLayout layout{};
@@ -12,10 +14,10 @@ int main() {
   layout.cursor = WindowSystem::Cursor::Type::ARROW;
   layout.width = 800;
   layout.height = 600;
-  layout.posx = 200;
-  layout.posy = 200;
-  layout.style = WindowSystem::WindowStyle::POPUP;
-  layout.show = WindowSystem::WindowShow::MAXIMIZED;
+  layout.posx = 9;
+  layout.posy = 0;
+  layout.style = WindowSystem::WindowStyle::NORMAL;
+  layout.show = WindowSystem::WindowShow::NORMAL;
   WindowSystem::Window window(layout);
 
   if (int r = window.Create(); r != 0) {
@@ -26,13 +28,8 @@ int main() {
     window.Update();
   }
 
-  /*
-  Error err = MAKE_ERROR(14, "Hello, world!", "Window", ErrorSeverity::Error);
-  TerminalLog(err, IoStream::Err);
-  */
-
   window.Destroy();
   return 0;
 }
 
-// ! TODO: Fix error headers include order
+// ! TODO: Fix header leak
