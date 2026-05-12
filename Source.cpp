@@ -14,9 +14,10 @@ int main() {
   layout.height = 600;
   layout.posx = 200;
   layout.posy = 200;
-  layout.state = WindowSystem::WindowState::NORMAL;
-  layout.style = WindowSystem::WindowStyle::NORMAL;
+  layout.style = WindowSystem::WindowStyle::POPUP;
+  layout.show = WindowSystem::WindowShow::MAXIMIZED;
   WindowSystem::Window window(layout);
+
   if (int r = window.Create(); r != 0) {
     return r;
   }
@@ -25,8 +26,10 @@ int main() {
     window.Update();
   }
 
+  /*
   Error err = MAKE_ERROR(14, "Hello, world!", "Window", ErrorSeverity::Error);
-  TerminalLog(err, IoStream::Err, Color::AsciiEnum::Green);
+  TerminalLog(err, IoStream::Err);
+  */
 
   window.Destroy();
   return 0;

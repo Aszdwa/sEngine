@@ -16,20 +16,52 @@ LRESULT CALLBACK Window::WndProc(HWND hwnd, UINT msg, WPARAM wParam,
   case WM_DESTROY:
     PostQuitMessage(0);
     return 0;
-  }
+
+    /*case WM_PAINT:
+      PAINTSTRUCT ps;
+      HDC hdc = BeginPaint(hwnd, &ps);
+      FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_HOTLIGHT + 1));
+      EndPaint(hwnd, &ps);
+    */
+  } // switch (msg)
 
   return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
 DWORD Window::GetWindowStyle() const {
+  DWORD style = 0;
+
   switch (layout.style) {
   case WindowStyle::BORDERLESS:
-    return WS_POPUP;
+    style = WS_POPUP;
+    break;
+
   case WindowStyle::POPUP:
-    return WS_POPUP | WS_VISIBLE;
+    style = WS_POPUPWINDOW;
+    break;
+
   case WindowStyle::NORMAL:
   default:
-    return WS_OVERLAPPEDWINDOW;
+    style = WS_OVERLAPPEDWINDOW;
+    break;
+  }
+
+  return style;
+}
+
+DWORD Window::GetWindowShow() const {
+  switch (layout.show) {
+  case WindowShow::HIDE:
+    return SW_HIDE;
+  case WindowShow::MINIMIZED:
+    return SW_MINIMIZE;
+  case WindowShow::MAXIMIZED:
+    return SW_MAXIMIZE;
+  case WindowShow::RESTORE:
+    return SW_RESTORE;
+  case WindowShow::NORMAL:
+  default:
+    return SW_SHOWNORMAL;
   }
 }
 
@@ -48,7 +80,7 @@ int Window::Create() {
   }
 
   platform.hwnd =
-      CreateWindowEx(0, layout.class_name, layout.title, WS_OVERLAPPEDWINDOW,
+      CreateWindowEx(0, layout.class_name, layout.title, GetWindowStyle(),
                      layout.posx, layout.posy, layout.width, layout.height,
                      nullptr, nullptr, platform.hInstance, nullptr);
 
@@ -57,7 +89,7 @@ int Window::Create() {
     return 2;
   }
 
-  ShowWindow(platform.hwnd, SW_SHOWDEFAULT);
+  // ShowWindow(platform.hwnd, SW_HIDE);
   UpdateWindow(platform.hwnd);
 
   running = true;
@@ -65,7 +97,7 @@ int Window::Create() {
 }
 
 void Window::Show() {
-  ShowWindow(platform.hwnd, SW_SHOW);
+  ShowWindow(platform.hwnd, GetWindowShow());
   UpdateWindow(platform.hwnd);
 }
 

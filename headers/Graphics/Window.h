@@ -10,13 +10,8 @@
 #endif
 //
 namespace WindowSystem {
-enum class WindowState {
-  MINIMIZED,
-  FULLSCREEN,
-  MAXIMIZED,
-  HIDDEN,
-  NORMAL
-}; // enum class WindowState
+
+enum class WindowShow { NORMAL, RESTORE, MINIMIZED, MAXIMIZED, HIDE };
 
 enum class WindowStyle { NORMAL, DIALOG, BORDERLESS, POPUP };
 
@@ -55,7 +50,7 @@ struct WindowLayout {
   int posx = 100;
   int posy = 100;
 
-  WindowState state = WindowState::NORMAL;
+  WindowShow show = WindowShow::NORMAL;
   WindowStyle style = WindowStyle::NORMAL;
   Cursor cursor;
 }; // struct WindowLayout
@@ -199,6 +194,7 @@ private:
   static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam,
                                   LPARAM lParam);
   DWORD GetWindowStyle() const;
+  DWORD GetWindowShow() const;
 #endif
 }; // class Window;
 
