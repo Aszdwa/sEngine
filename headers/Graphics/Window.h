@@ -4,11 +4,6 @@
 #include "Compatibility/Compatibility.h" // IWYU pragma: keep
 #include <string>
 //
-#ifdef WINDOWS_PLATFORM
-#define WIN32_LEAN_AND_MEAN
-#include "Windows.h" // IWYU pragma: keep
-#endif
-//
 namespace WindowSystem {
 
 enum class WindowShow { NORMAL, RESTORE, MINIMIZED, MAXIMIZED, HIDE };
@@ -164,10 +159,8 @@ public:
 
 private:
 #ifdef WINDOWS_PLATFORM
-  static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam,
-                                  LPARAM lParam);
-  DWORD GetWindowStyle() const;
-  DWORD GetWindowShow() const;
+  unsigned long GetWindowStyle() const;
+  unsigned long GetWindowShow() const;
 #endif
 }; // class Window;
 

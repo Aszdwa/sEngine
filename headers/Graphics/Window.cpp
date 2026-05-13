@@ -1,6 +1,11 @@
 #include "Graphics/Window.h" // IWYU pragma: keep
 #include "Error/ErrorCore.h" // IWYU pragma: keep
 //
+#ifdef WINDOWS_PLATFORM
+#define WIN32_LEAN_AND_MEAN
+#include "Windows.h" // IWYU pragma: keep
+#endif
+//
 namespace WindowSystem {
 struct Window::WindowPlatform {
 #ifdef WINDOWS_PLATFORM
@@ -26,8 +31,7 @@ namespace WindowSystem {
 
 #ifdef WINDOWS_PLATFORM
 
-LRESULT CALLBACK Window::WndProc(HWND hwnd, UINT msg, WPARAM wParam,
-                                 LPARAM lParam) {
+LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
   switch (msg) {
   case WM_CLOSE:
     DestroyWindow(hwnd);

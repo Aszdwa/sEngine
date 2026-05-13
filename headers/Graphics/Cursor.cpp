@@ -1,5 +1,10 @@
 #include "Window.h" // IWYU pragma: keep
 //
+#ifdef WINDOWS_PLATFORM
+#define WIN32_LEAN_AND_MEAN
+#include "Windows.h" // IWYU pragma: keep
+#endif
+//
 namespace WindowSystem {
 struct Cursor::CursorPlatform {
 #ifdef WINDOWS_PLATFORM

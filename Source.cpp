@@ -11,10 +11,10 @@ int main() {
   WindowSystem::WindowLayout layout{};
   layout.title = "Janeulas";
   layout.class_name = "Janeulas class";
-  layout.cursor = WindowSystem::Cursor::Type::HAND;
+  layout.cursor = WindowSystem::Cursor::Type::ARROW;
   layout.width = 800;
   layout.height = 600;
-  layout.posx = 9;
+  layout.posx = 0;
   layout.posy = 0;
   layout.style = WindowSystem::WindowStyle::NORMAL;
   layout.show = WindowSystem::WindowShow::NORMAL;
