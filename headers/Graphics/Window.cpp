@@ -146,3 +146,62 @@ void Window::Update() {
 #endif // LINUX_PLATFORM
 
 } // namespace WindowSystem
+
+namespace WindowSystem {
+DialogResult Dialog::Show() {
+#ifdef WINDOWS_PLATFORM
+  UINT flags = MB_ICONERROR;
+
+  switch (layout.type) {
+  case DialogType::Ok:
+    flags |= MB_OK;
+    break;
+  case DialogType::Help:
+    flags |= MB_OK | MB_HELP;
+    break;
+  case DialogType::CancelContinue:
+    flags |= MB_CANCELTRYCONTINUE;
+    break;
+  case DialogType::AbortRetryContinue:
+    flags |= MB_ABORTRETRYIGNORE;
+    break;
+  case DialogType::OkCancel:
+    flags |= MB_OKCANCEL;
+    break;
+  case DialogType::RetryCancel:
+    flags |= MB_RETRYCANCEL;
+    break;
+  case DialogType::YesNo:
+    flags |= MB_YESNO;
+    break;
+  case DialogType::YesNoCancel:
+    flags |= MB_YESNOCANCEL;
+    break;
+  }
+  int result =
+      MessageBoxA(nullptr, layout.message.c_str(), layout.title.c_str(), flags);
+#endif // WINDOWS_PLATFORM
+  switch (result) {
+  case IDOK:
+    return DialogResult::Ok;
+  case IDCANCEL:
+    return DialogResult::Cancel;
+  case IDRETRY:
+    return DialogResult::Retry;
+  case IDYES:
+    return DialogResult::Yes;
+  case IDNO:
+    return DialogResult::No;
+  case IDIGNORE:
+    return DialogResult::Ignore;
+  case IDCONTINUE:
+    return DialogResult::Continue;
+  case IDABORT:
+    return DialogResult::Abort;
+  case IDHELP:
+    return DialogResult::Help;
+  default:
+    return DialogResult::Unknown;
+  } // switch result
+}
+}; // namespace WindowSystem
