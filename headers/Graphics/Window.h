@@ -200,12 +200,4 @@ private:
 
 }; // namespace WindowSystem
 
-namespace WindowSystem { // Implementations
-#ifdef WINDOWS_PLATFORM
-
-#elif LINUX_PLATFORM
-
-#endif // PLATFORM SPECIFIC CHECK
-}; // namespace WindowSystem
-
 #endif // WINDOW_H
