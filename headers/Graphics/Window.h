@@ -25,19 +25,41 @@ public:
   void Destroy();
 
 public:
-  Cursor() { Load(Type::ARROW); };
-  Cursor(Type type) { Load(type); }
-  Cursor(const char *path) { LoadFromFile(path); }
+  Cursor();
+  ~Cursor();
 
 public:
-#ifdef WINDOWS_PLATFORM
-  HCURSOR GetHandle() const { return hcursor; }
-#endif
+  Cursor &operator=(Type type) {
+    Destroy();
+    Load(type);
+    return *this;
+  }
+
+  Cursor &operator=(const char *s) {
+    Destroy();
+    LoadFromFile(s);
+    return *this;
+  }
 
 private:
+  struct CursorPlatform;
+  alignas(void *) std::byte platformStorage[16];
+  CursorPlatform *platform = nullptr;
+
+public:
+  void createPlatform();
+
+  CursorPlatform *getPlatform() {
+    return reinterpret_cast<CursorPlatform *>(platformStorage);
+  }
+  const CursorPlatform *getPlatform() const {
+    return reinterpret_cast<const CursorPlatform *>(platformStorage);
+  }
+
 #ifdef WINDOWS_PLATFORM
-  HCURSOR hcursor;
-#endif // WINDOWS_PLATFORM
+  // HCURSOR nativeHandle() const;
+  void *nativeHandle() const;
+#endif
 }; // class Cursor
 
 struct WindowLayout {
@@ -54,13 +76,6 @@ struct WindowLayout {
   WindowStyle style = WindowStyle::NORMAL;
   Cursor cursor;
 }; // struct WindowLayout
-
-struct WindowPlatform {
-#ifdef WINDOWS_PLATFORM
-  HWND hwnd = nullptr;
-  HINSTANCE hInstance = nullptr;
-#endif
-};
 
 }; // namespace WindowSystem
 
@@ -183,11 +198,24 @@ public:
 public:
   Window() = default;
   Window(const WindowLayout &layout);
+  ~Window();
 
 private:
   WindowLayout layout{};
-  WindowPlatform platform{};
   bool running = false;
+
+private:
+  struct WindowPlatform;
+  alignas(void *) std::byte platformStorage[16];
+  WindowPlatform *platform = nullptr;
+
+public:
+  WindowPlatform *getPlatform() {
+    return reinterpret_cast<WindowPlatform *>(platformStorage);
+  }
+  const WindowPlatform *getPlatform() const {
+    return reinterpret_cast<const WindowPlatform *>(platformStorage);
+  }
 
 private:
 #ifdef WINDOWS_PLATFORM

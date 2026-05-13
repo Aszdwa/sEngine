@@ -1,8 +1,25 @@
 #include "Graphics/Window.h" // IWYU pragma: keep
 #include "Error/ErrorCore.h" // IWYU pragma: keep
-
+//
 namespace WindowSystem {
-Window::Window(const WindowLayout &layout) : layout(layout) {}
+struct Window::WindowPlatform {
+#ifdef WINDOWS_PLATFORM
+  HWND hwnd = nullptr;
+  HINSTANCE hInstance = nullptr;
+#endif
+};
+
+Window::Window(const WindowLayout &layout) : layout(layout) {
+  static_assert(sizeof(WindowPlatform) <= sizeof(platformStorage),
+                "platformStorage is too small! Increase the size in Window.h");
+  static_assert(alignof(WindowPlatform) <= alignof(void *),
+                "Alignment mismatch for platformStorage");
+  ::new (platformStorage) WindowPlatform();
+  platform = getPlatform();
+}
+
+Window::~Window() { getPlatform()->~WindowPlatform(); }
+
 } // namespace WindowSystem
 
 namespace WindowSystem {
@@ -62,13 +79,13 @@ DWORD Window::GetWindowShow() const {
 }
 
 int Window::Create() {
-  platform.hInstance = GetModuleHandle(nullptr);
+  platform->hInstance = GetModuleHandle(nullptr);
 
   WNDCLASS wc{};
   wc.lpfnWndProc = WndProc;
-  wc.hInstance = platform.hInstance;
+  wc.hInstance = platform->hInstance;
   wc.lpszClassName = layout.class_name;
-  wc.hCursor = layout.cursor.GetHandle();
+  wc.hCursor = static_cast<HCURSOR>(layout.cursor.nativeHandle());
 
   if (!RegisterClass(&wc)) {
     ErrorContext::Error err =
@@ -78,12 +95,12 @@ int Window::Create() {
     return 1;
   }
 
-  platform.hwnd =
+  platform->hwnd =
       CreateWindowEx(0, layout.class_name, layout.title, GetWindowStyle(),
                      layout.posx, layout.posy, layout.width, layout.height,
-                     nullptr, nullptr, platform.hInstance, nullptr);
+                     nullptr, nullptr, platform->hInstance, nullptr);
 
-  if (!platform.hwnd) {
+  if (!platform->hwnd) {
     ErrorContext::Error err =
         ErrorContext::MAKE_ERROR(2, "Failed to create window", "Window",
                                  ErrorContext::ErrorSeverity::Fatal);
@@ -92,21 +109,21 @@ int Window::Create() {
   }
 
   // ShowWindow(platform.hwnd, SW_HIDE);
-  UpdateWindow(platform.hwnd);
+  UpdateWindow(platform->hwnd);
 
   running = true;
   return 0;
 }
 
 void Window::Show() {
-  ShowWindow(platform.hwnd, GetWindowShow());
-  UpdateWindow(platform.hwnd);
+  ShowWindow(platform->hwnd, GetWindowShow());
+  UpdateWindow(platform->hwnd);
 }
 
 void Window::Destroy() {
-  if (platform.hwnd) {
-    DestroyWindow(platform.hwnd);
-    platform.hwnd = nullptr;
+  if (platform->hwnd) {
+    DestroyWindow(platform->hwnd);
+    platform->hwnd = nullptr;
   }
   running = false;
 }

@@ -1,6 +1,39 @@
 #include "Window.h" // IWYU pragma: keep
 //
 namespace WindowSystem {
+struct Cursor::CursorPlatform {
+#ifdef WINDOWS_PLATFORM
+  HCURSOR cursor = nullptr;
+  bool owned = false;
+#endif
+};
+
+#ifdef WINDOWS_PLATFORM
+// HCURSOR Cursor::nativeHandle() const { return platform->cursor; }
+void *Cursor::nativeHandle() const { return platform->cursor; }
+#endif
+
+void Cursor::createPlatform() {
+  static_assert(sizeof(CursorPlatform) <= sizeof(platformStorage),
+                "platformStorage is too small! Increase the size in Window.h");
+  static_assert(alignof(CursorPlatform) <= alignof(void *),
+                "Alignment mismatch for platformStorage");
+  ::new (platformStorage) CursorPlatform();
+  platform = getPlatform();
+}
+
+Cursor::Cursor() {
+  createPlatform();
+  Load(Type::ARROW);
+}
+
+Cursor::~Cursor() {
+  this->Destroy();
+  getPlatform()->~CursorPlatform();
+}
+} // namespace WindowSystem
+
+namespace WindowSystem {
 #ifdef WINDOWS_PLATFORM
 
 bool Cursor::Load(const Type &type) {
@@ -26,22 +59,25 @@ bool Cursor::Load(const Type &type) {
     return false;
   }
 
-  hcursor = LoadCursor(nullptr, winCursor);
-  return hcursor != nullptr;
+  platform->cursor = LoadCursor(nullptr, winCursor);
+  platform->owned = false;
+  return platform->cursor != nullptr;
 }
 
 bool Cursor::LoadFromFile(const char *path) {
-  hcursor = static_cast<HCURSOR>(
+  platform->cursor = static_cast<HCURSOR>(
       LoadImageA(nullptr, path, IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE));
-
-  return hcursor != nullptr;
+  platform->owned = platform->cursor != nullptr;
+  return platform->cursor != nullptr;
 }
 
 void Cursor::Destroy() {
-  if (hcursor) {
-    DestroyCursor(hcursor); // safe for LoadImage
-    hcursor = nullptr;
+  if (platform->cursor && platform->owned) {
+    DestroyCursor(platform->cursor);
   }
+
+  platform->cursor = nullptr;
+  platform->owned = false;
 }
 #elif LINUX_PLATFORM
 // ! Linux placeholder

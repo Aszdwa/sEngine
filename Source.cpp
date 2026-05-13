@@ -11,7 +11,7 @@ int main() {
   WindowSystem::WindowLayout layout{};
   layout.title = "Janeulas";
   layout.class_name = "Janeulas class";
-  layout.cursor = WindowSystem::Cursor::Type::ARROW;
+  layout.cursor = WindowSystem::Cursor::Type::HAND;
   layout.width = 800;
   layout.height = 600;
   layout.posx = 9;
