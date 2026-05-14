@@ -1,3 +1,6 @@
+#ifndef VULKAN_OBJECT_H
+#define VULKAN_OBJECT_H
+//
 #include "VkInclude.h"                   // IWYU pragma: keep
 #include "Compatibility/Compatibility.h" // IWYU pragma: keep
 #include <vector>
@@ -26,3 +29,4 @@ private:
   vk::Instance instance = VK_NULL_HANDLE;
 };
 }; // namespace VulkanContext
+#endif // VULKAN_OBJECT_H

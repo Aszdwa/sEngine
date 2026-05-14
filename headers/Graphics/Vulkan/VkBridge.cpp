@@ -30,10 +30,10 @@ void VkObject::Cleanup() {
     vkDestroyInstance(instance, nullptr); // Second param is allocator callback
     this->instance = VK_NULL_HANDLE;
   }
-  ErrorContext::Error err =
+  ErrorContext::Error info =
       ErrorContext::MAKE_ERROR(0, "Finished vulkan cleanup", "Vulkan",
                                ErrorContext::ErrorSeverity::Info);
-  REPORT_ERROR(err);
+  REPORT_ERROR(info);
 }
 
 VkObject &VkObject::sInstance() {
