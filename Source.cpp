@@ -3,7 +3,7 @@
 #include "Error/ErrorCore.h" // IWYU pragma: keep
 using namespace ErrorContext;
 
-#include "Graphics/Window.h"
+#include "Graphics/Window/Window.h"
 
 #include "Graphics/Vulkan/VkCore.h"
 
@@ -27,6 +27,7 @@ int main() {
   }
 
   VulkanContext::VulkanCore vkcore;
+  vkcore.addValidationLayer("VK_LAYER_KHRONOS_validation");
   vkcore.Initialize();
 
   window.Show();

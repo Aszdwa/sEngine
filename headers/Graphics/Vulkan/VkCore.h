@@ -9,6 +9,7 @@ public:
   ~VulkanCore() = default;
 
 public:
+  void addValidationLayer(const char *c);
   void CreateInstance();
 
 public:

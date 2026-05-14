@@ -1,5 +1,5 @@
-#include "Graphics/Window.h" // IWYU pragma: keep
-#include "Error/ErrorCore.h" // IWYU pragma: keep
+#include "Graphics/Window/Window.h" // IWYU pragma: keep
+#include "Error/ErrorCore.h"        // IWYU pragma: keep
 //
 #ifdef WINDOWS_PLATFORM
 #define WIN32_LEAN_AND_MEAN

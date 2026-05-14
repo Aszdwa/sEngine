@@ -5,7 +5,7 @@
 #include "ErrorTypes.h"
 #include "ErrorFormatting.h"
 #include "Graphics/Color.h"
-#include "Graphics/Window.h"
+#include "Graphics/Window/Window.h"
 
 #include <iostream>
 

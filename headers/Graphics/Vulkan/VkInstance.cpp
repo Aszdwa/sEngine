@@ -3,6 +3,5 @@
 //
 void VulkanContext::VulkanCore::CreateInstance() {
   vk::Instance instance;
-
   VkObject::sInstance().setInstance(instance);
 }
