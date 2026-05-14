@@ -1,9 +1,11 @@
 #include "Graphics/Color.h" // IWYU pragma: keep
-#define CUSTOM_ERROR_HANDLER
+// #define CUSTOM_ERROR_HANDLER
 #include "Error/ErrorCore.h" // IWYU pragma: keep
 using namespace ErrorContext;
 
 #include "Graphics/Window.h"
+
+#include "Graphics/Vulkan/VkCore.h"
 
 void Handle(Error &error) { TerminalLog(error, IoStream::Err); }
 
@@ -23,6 +25,10 @@ int main() {
   if (int r = window.Create(); r != 0) {
     return r;
   }
+
+  VulkanContext::VulkanCore vkcore;
+  vkcore.Initialize();
+
   window.Show();
   while (window.IsRunning()) {
     window.Update();
@@ -31,5 +37,3 @@ int main() {
   window.Destroy();
   return 0;
 }
-
-// ! TODO: Fix header leak
