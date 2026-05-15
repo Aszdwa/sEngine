@@ -36,5 +36,6 @@ int main() {
   }
 
   window.Destroy();
+
   return 0;
 }

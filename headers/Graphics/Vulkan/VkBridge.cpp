@@ -46,9 +46,34 @@ void VkObject::addValidationLayer(const char *c) noexcept {
   this->validationLayers.push_back(c);
 }
 
+const std::vector<const char *> VkObject::getValidationLayers() {
+  return validationLayers;
+}
+
 void VkObject::setInstance(const vk::Instance &arg_instance) noexcept {
   this->instance = arg_instance;
 }
 
+void VkObject::setEnableValidationLayers(const bool &b) {
+  enableValidationLayers = b;
+}
+
 vk::Instance VkObject::getInstance() const { return this->instance; }
+
+bool VkObject::getEnableValidationLayers() const {
+  return this->enableValidationLayers;
+}
+
+const std::vector<const char *> VkObject::getRequiredExtensions() {
+  std::vector<const char *> extensions = {
+      vk::KHRSurfaceExtensionName,
+      vk::KHRWin32SurfaceExtensionName,
+  };
+
+  if (this->enableValidationLayers) {
+    extensions.push_back(vk::EXTDebugUtilsExtensionName);
+  }
+
+  return extensions;
+}
 }; // namespace VulkanContext

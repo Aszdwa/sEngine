@@ -19,13 +19,19 @@ public:
 
 public: // ? Setters
   void addValidationLayer(const char *c) noexcept;
+  void setEnableValidationLayers(const bool &b);
   void setInstance(const vk::Instance &instance) noexcept;
 
 public: // ? Getters
+  bool getEnableValidationLayers() const;
+  const std::vector<const char *> getValidationLayers();
+  const std::vector<const char *> getRequiredExtensions();
   vk::Instance getInstance() const;
 
 private:
+  bool enableValidationLayers = false;
   std::vector<const char *> validationLayers = {};
+  std::vector<const char *> instanceExtensions = {};
   vk::Instance instance = VK_NULL_HANDLE;
 };
 }; // namespace VulkanContext
