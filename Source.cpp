@@ -28,6 +28,7 @@ int main() {
 
   VulkanContext::VulkanCore vkcore;
   vkcore.addValidationLayer("VK_LAYER_KHRONOS_validation");
+  vkcore.addValidationLayer("VK_LAYER_KHRONOS_valifefedation");
   vkcore.Initialize();
 
   window.Show();

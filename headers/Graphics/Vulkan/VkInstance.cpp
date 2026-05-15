@@ -15,9 +15,15 @@ void VulkanContext::VulkanCore::CreateInstance() {
       .setEngineVersion(VK_MAKE_VERSION(1, 0, 0))
       .setApiVersion(VK_MAKE_API_VERSION(0, 1, 4, 0));
 
+#ifdef DEBUG
+  VkObject::sInstance().setEnableValidationLayers(true);
+#endif
+
   // Get the required layers
-  std::vector<char const *> requiredLayers =
-      VkObject::sInstance().getValidationLayers();
+  std::vector<char const *> requiredLayers = {};
+  if (VkObject::sInstance().getEnableValidationLayers()) {
+    requiredLayers = VkObject::sInstance().getValidationLayers();
+  }
 
   std::vector<const char *> requiredExtensions =
       VkObject::sInstance().getRequiredExtensions();
